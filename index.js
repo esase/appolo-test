@@ -65,6 +65,14 @@ const resolvers = {
             });
         }
     },
+    Comment: {
+        // try to resolve books
+        book(obj, args, context, info) {
+            return allBooks.find((book) => {
+                return book.id == obj.bookId;
+            });
+        }
+    },
     Query: {
       authors: () => allAuthors,
       books: () => allBooks,
@@ -84,7 +92,7 @@ const server = new ApolloServer({
     resolvers,
     introspection: true,
     playground: true,
-    validationRules: [depthLimit(2)]
+    validationRules: [depthLimit(3)]
 });
 
 // The `listen` method launches a web server.
