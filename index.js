@@ -8,6 +8,10 @@ const allComments = require('./data/comments.json');
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = gql`
+  directive @deprecated(
+    reason: String = "No longer supported"
+  ) on FIELD_DEFINITION | ENUM_VALUE
+  
   # a root interface all types
   interface Node {
     id: ID!
@@ -29,6 +33,7 @@ const typeDefs = gql`
   type Comment implements Node {
     id: ID!
     message: String!
+    oldMessage: String @deprecated(reason: "Use message field instead.")
     author: String,
     book: Book!
   }
