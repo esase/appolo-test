@@ -40,8 +40,11 @@ const typeDefs = gql`
 
   type Query {
     authors: [Author!],
+    author(id: ID): Author,
     books: [Book!],
-    comments: [Comment!]
+    book(id: ID): Book,
+    comments: [Comment!],
+    comment(id: ID): Comment
   }
 `;
 
@@ -73,6 +76,7 @@ const resolvers = {
     Comment: {
         // try to resolve books
         book(obj, args, context, info) {
+            // console.log(context.someGlobalValue);
             return allBooks.find((book) => {
                 return book.id == obj.bookId;
             });
@@ -80,8 +84,23 @@ const resolvers = {
     },
     Query: {
       authors: () => allAuthors,
+      author(parent, args, context, info) {
+        return allAuthors.find((author) => {
+            return author.id == args.id;
+        });
+      },
       books: () => allBooks,
-      comments: () => allComments
+      book(parent, args, context, info) {
+        return allBooks.find((book) => {
+            return book.id == args.id;
+        });
+      },
+      comments: () => allComments,
+      comment(parent, args, context, info) {
+        return allComments.find((comment) => {
+            return comment.id == args.id;
+        });
+      },
     },
     Node: {
         __resolveType() {
@@ -97,7 +116,10 @@ const server = new ApolloServer({
     resolvers,
     introspection: true,
     playground: true,
-    validationRules: [depthLimit(3)]
+    validationRules: [depthLimit(3)],
+    context: () => ({ // here we can provide any list of global settings
+      someGlobalValue: 'test'
+    })
 });
 
 // The `listen` method launches a web server.
