@@ -9,14 +9,14 @@ export const typeDef = `
   }
 
   extend type Mutation {
-    addBook(title: String!, authorId: String!): Book
+    addBook(title: String!, authorId: String!): Book,
+    deleteBook(id: String!): Boolean
   }
 
   type Book implements Node {
     id: ID!
     title: String!
     author: Author!
-    #comments: [Comment!]
   }
 `;
 
@@ -34,16 +34,21 @@ export const resolvers = {
         }
 
         return await BookModel.create(args);
+      },
+      deleteBook: async(_, args) =>  {
+        const book = await BookModel.findById(args.id).exec();
+
+        if (book) {
+          await BookModel.findByIdAndDelete(args.id).exec();
+
+          return true;
+        }
+
+        return false;
       }
     },
     Book: {
         // try to resolve a book's author
         author: async(obj, args, context, info) => await AuthorModel.findById(obj.authorId).exec()
-        // // try to resolve a book's list of comments
-        // comments(obj, args, context, info) {
-        //     return allComments.filter((comment) => {
-        //         return comment.bookId == obj.id;
-        //     });
-        // }
     }
   };

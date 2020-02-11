@@ -9,7 +9,8 @@ export const typeDef = `
   }
 
   extend type Mutation {
-    addAuthor(name: String!): Author
+    addAuthor(name: String!): Author,
+    deleteAuthor(id: String!): Boolean
   }
 
   type Author implements Node {
@@ -25,7 +26,18 @@ export const resolvers = {
       author:  async(parent, args, context, info) => await AuthorModel.findById(args.id).exec(),
     },
     Mutation: {
-      addAuthor: async (_, args) => await AuthorModel.create(args)
+      addAuthor: async (_, args) => await AuthorModel.create(args),
+      deleteAuthor: async(_, args) =>  {
+        const author = await AuthorModel.findById(args.id).exec();
+
+        if (author) {
+          await AuthorModel.findByIdAndDelete(args.id).exec();
+
+          return true;
+        }
+
+        return false;
+      }
     },
     Author: {
       // try to resolve an author's list of books
