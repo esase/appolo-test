@@ -4,14 +4,15 @@
     "scripts": {},
     "private": true,
     "dependencies": {
+        "@babel/core": "^7.8.4",
+        "@babel/preset-env": "^7.8.4",
+        "@babel/register": "^7.8.3",
         "apollo-server": "^2.9.16",
+        "babel-polyfill": "^6.26.0",
         "graphql": "^14.6.0",
         "graphql-depth-limit": "^1.1.0",
         "lodash": "^4.17.15",
-        "@babel/core": "^7.8.4",
-        "@babel/preset-env": "^7.8.4",
-        "@babel/register": "^7.8.3"
+        "mongoose": "^5.8.11"
     },
-    "devDependencies": {
-    }
+    "devDependencies": {}
 }

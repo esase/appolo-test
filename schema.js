@@ -5,22 +5,17 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { 
   typeDef as Base, 
   resolvers as baseResolvers,
-} from './features/base.js';
+} from './features/base/schema';
 
 import { 
   typeDef as Author, 
   resolvers as authorResolvers,
-} from './features/author.js';
+} from './features/author/schema';
 
 import { 
   typeDef as Book, 
   resolvers as bookResolvers,
-} from './features/book.js';
-
-import { 
-  typeDef as Comment, 
-  resolvers as commentResolvers,
-} from './features/comment.js';
+} from './features/book/schema';
 
 const Query = `
   type Query {
@@ -28,20 +23,25 @@ const Query = `
   }
 `;
 
+const Mutation = `
+  type Mutation {
+    _empty: String
+  }
+`;
+
 export const schema = makeExecutableSchema({
   typeDefs: [ 
     Query,
+    Mutation,
     Base, 
     Author, 
-    Book,
-    Comment
+    Book
   ],
   resolvers: merge(
     {}, 
     baseResolvers,
     authorResolvers, 
-    bookResolvers,
-    commentResolvers
+    bookResolvers
   )
 });
 
